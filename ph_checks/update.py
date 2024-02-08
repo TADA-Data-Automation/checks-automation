@@ -36,8 +36,9 @@ def main():
   df1 = bot.getLatestFile(os.getenv('CACHE_CHANNEL'))
 
   df = pd.concat([df, df1])
-  df = df.drop_duplicates(['id', 'car_plate'], keep='first')
+
   df = df.sort_values('phv')
+  df = df.drop_duplicates(['id', 'car_plate'], keep='last')
   df = df[df['phv'] >= 0]
 
   df.to_csv(output_file, index=False)

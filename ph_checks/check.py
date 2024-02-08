@@ -106,7 +106,7 @@ if __name__ == '__main__':
 
   df = pd.read_csv('car_plates.csv')
 
-  df = df[:1000]
+  df = df[:4000]
 
   parser = argparse.ArgumentParser()
   parser.add_argument('--partition', type=int, help='Partition number')
