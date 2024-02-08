@@ -24,7 +24,7 @@ def main():
 
   output_file = f'data/vl_monthly_{time.strftime("%m_%Y")}.csv'
 
-  df = collate_csv(output_file)
+  df = collate_csv()
 
   df.to_csv(output_file, index=False)
 
