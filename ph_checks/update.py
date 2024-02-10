@@ -35,8 +35,8 @@ def main():
   bot = SlackBot()
 
   prev = bot.getLatestFile(os.getenv('CACHE_CHANNEL'))
-  unknown = df[df['phv' < 0]]
-  known  = df[df['phv' >= 0]]
+  unknown = df[df['phv'] < 0]
+  known  = df[df['phv'] >= 0]
 
   df1 = pd.concat([unknown, prev])
 
