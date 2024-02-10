@@ -45,6 +45,8 @@ def main():
 
   df1 = pd.concat([df1, known])
 
+  df1['updated_at'] = pd.to_datetime(df1['updated_at']).date()
+
   df1 = df1.sort_values('updated_at')
   df1 = df1.drop_duplicates(['id', 'car_plate'], keep='last')
 
