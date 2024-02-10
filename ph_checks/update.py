@@ -51,6 +51,8 @@ def main():
   df1 = df1.sort_values('updated_at')
   df1 = df1.drop_duplicates(['id', 'car_plate'], keep='last')
 
+  df1 = df1.sort_values(['phv', 'updated_at'], ascending=[True, False]).reset_index(drop=True)
+
   df1.to_csv(output_file, index=False)
 
   bot.deleteLatestMessage(os.getenv('CACHE_CHANNEL'))
