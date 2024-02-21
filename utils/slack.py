@@ -34,7 +34,7 @@ class SlackBot:
         self.logger.error("Error uploading file: {}".format(e))
 
   def to_pandas(self, url:str) -> pd.DataFrame:
-    response = requests.get(url, headers={'Authorization': f'Bearer {os.getenv("SLACK_TOKEN")}'})
+    response = requests.get(url, headers={'Authorization': f'Bearer {os.getenv("SLACK_TOKEN")}'}, timeout=60)
 
     return pd.read_csv(StringIO(response.text))
     
