@@ -3,7 +3,7 @@ name: PH Check Hourly
 # Controls when the workflow will run
 on:
   schedule:
-    - cron: '00 0-15 * * *'
+    - cron: '00 0-15/3 * * *'
   workflow_dispatch:
 
 jobs:

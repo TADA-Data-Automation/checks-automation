@@ -1,9 +1,10 @@
-name: CT Check Monthly
+name: CT Check Fortnightly
 
 # Controls when the workflow will run
 on:
   schedule:
-    - cron: '15 23 1 * *'
+    - cron: '15 23 13 * *'
+    - cron: '15 23 27 * *'
   workflow_dispatch:
 
 jobs:
