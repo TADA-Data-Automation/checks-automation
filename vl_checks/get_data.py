@@ -19,7 +19,9 @@ def main(encrypt:bool):
       TO_CHAR(birth, 'DD-MM-YYYY') AS birth,
       TO_CHAR(vl_expiry_date, 'DD-MM-YYYY') AS vl_expiry_date
   FROM tada_member_service.driver
-  WHERE approved = True
+  WHERE approved = true
+    AND banned = false
+    AND test_account = false
     AND region='SG'
     AND type in ('TAXI','HOURLY_RENTAL','PRIVATE_HIRE')
   ORDER BY last_approved_at DESC

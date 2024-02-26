@@ -14,6 +14,7 @@ WITH driver AS
     approved_at
   FROM tada_member_service.driver
   WHERE banned = false
+    AND test_account = false
     AND approved = true
     AND region = 'SG')
 , doc AS
