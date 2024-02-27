@@ -35,6 +35,7 @@ def main():
 
   if checked is not None:
     checked = checked[checked['phv'] >= 0].drop(columns=['id'])
+    checked.loc[checked['phv'] < 1, 'decal'] = pd.NA
 
     merged = df.merge(checked, on='car_plate', how='left')
     merged['phv'] = merged['phv'].astype('Int64')
