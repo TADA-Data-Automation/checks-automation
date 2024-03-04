@@ -50,11 +50,13 @@ def main():
     bot.deleteLatestMessage(os.getenv('CACHE_CHANNEL'))
     bot.uploadFile('data/checked.csv', os.getenv('CACHE_CHANNEL'), f'Last Updated: {time.strftime("%Y-%m-%d %H:%M:%S")}')
 
-    if len(df) < 2000:
-      remaining = 2000 - len(df)
+    if len(df) < 4000:
+      remaining = 4000 - len(df)
       to_check = df_checked.sort_values(by='updated_at').drop(columns=['updated_at'])
 
       df = pd.concat([df, to_check[:remaining]])
+
+    df = df.sort_values(['phv', 'updated_at'])
 
     df.to_csv('data/car_plates.csv', index=False)
   else:
