@@ -56,8 +56,6 @@ def main():
 
       df = pd.concat([df, to_check[:remaining]])
 
-    df = df.sort_values(['phv', 'updated_at'])
-
     df.to_csv('data/car_plates.csv', index=False)
   else:
     df.to_csv('data/car_plates.csv', index=False)
