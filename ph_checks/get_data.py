@@ -52,7 +52,7 @@ def main():
 
     if len(df) < 4000:
       remaining = 4000 - len(df)
-      to_check = df_checked.sort_values(by='updated_at').drop(columns=['updated_at'])
+      to_check = df_checked.sort_values(['phv', 'updated_at']).drop(columns=['updated_at'])
 
       df = pd.concat([df, to_check[:remaining]])
 
