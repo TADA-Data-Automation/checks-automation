@@ -94,7 +94,7 @@ jobs:
           name: get-data
       
       - name: execute py script
-        run: python -m ph_checks.check --partition ${{ matrix.partition }}
+        run: python -m ph_checks.check_no_captcha --partition ${{ matrix.partition }}
 
       - name: upload artifacts
         uses: actions/upload-artifact@v4
