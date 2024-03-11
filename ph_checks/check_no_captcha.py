@@ -43,18 +43,15 @@ def get_captcha(driver):
 def fill_form(driver, car_plate):
   vehicle_input = driver.find_element(By.XPATH, '/html/body/section/div[3]/div[4]/div[2]/div[2]/form/div/div[3]/div[2]/div/div/div/div/div/p/input')
   checkbox = driver.find_element(By.XPATH, '/html/body/section/div[3]/div[4]/div[2]/div[2]/form/div/div[5]/div/label/span[3]')
-  submit_button = driver.find_element(By.XPATH, '/html/body/section/div[3]/div[4]/div[2]/div[2]/form/div/div[7]/button')
+  submit_button = driver.find_element(By.XPATH, '/html/body/section/div[3]/div[4]/div[2]/div[2]/form/div/div[6]/button')
 
   vehicle_input.send_keys(car_plate)
   checkbox.click()
   submit_button.click()
 
   try:
-    err = driver.find_element(By.XPATH, '//*[@id="backend-error"]/table/tbody/tr/td/ul/li').text
-    if "CM00127" in err:
-      fill_form(driver, car_plate)
-    elif "CM00078" in err:
-      return False
+    err = driver.find_element(By.XPATH, '/html/body/section/div[3]/div[4]/div[2]/div[2]/form/div/div[6]/div/table/tbody/tr/td/ul/li').text
+    return False
   except:
     return True
 
