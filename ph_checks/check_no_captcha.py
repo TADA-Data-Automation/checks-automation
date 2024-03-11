@@ -1,46 +1,21 @@
 import argparse
 import os
-from io import BytesIO
 
-import numpy as np
 import pandas as pd
 from dotenv import load_dotenv
-from PIL import Image
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 
 from utils.loader import Loader
-from utils.solver import decode_captcha
 
 
-def get_partition(df: pd.DataFrame, partition:int, total_partitions: int=50):
+def get_partition(df: pd.DataFrame, partition:int, total_partitions: int=40):
   chunk_size = len(df) // total_partitions + 1
 
   return df[partition*chunk_size:(partition+1)*chunk_size]
 
-def get_captcha(driver):
-  driver.get(os.getenv('PH_URL'))
-
-  screenshot = driver.get_screenshot_as_png()
-
-  # save screenshot
-  Image.open(BytesIO(screenshot)).save('screenshot.png')
-
-  corner_x = 585
-  corner_y = 770
-  width = 365
-  height = 75
-  screenshot = np.array(Image.open(BytesIO(screenshot)))
-  screenshot = screenshot[corner_y:corner_y+height, corner_x:corner_x+width]
-
-  image = Image.fromarray(screenshot)
-  image.save('input.png')
-
-  captcha = decode_captcha('input.png')
-
-  return captcha if len(captcha) == 5 else get_captcha(driver)
-
 def fill_form(driver, car_plate):
+  driver.get(os.getenv('PH_URL'))
   vehicle_input = driver.find_element(By.XPATH, '/html/body/section/div[3]/div[4]/div[2]/div[2]/form/div/div[3]/div[2]/div/div/div/div/div/p/input')
   checkbox = driver.find_element(By.XPATH, '/html/body/section/div[3]/div[4]/div[2]/div[2]/form/div/div[5]/div/label/span[3]')
   submit_button = driver.find_element(By.XPATH, '/html/body/section/div[3]/div[4]/div[2]/div[2]/form/div/div[6]/button')
@@ -60,7 +35,6 @@ def main(df, partition):
 
   options = webdriver.ChromeOptions()
   options.add_argument("--headless")
-  options.add_argument("--window-size=1920,1200")
   driver = webdriver.Chrome(options=options)
   driver.implicitly_wait(5)
 

@@ -13,7 +13,7 @@ from utils.loader import Loader
 from utils.solver import decode_captcha
 
 
-def get_partition(df: pd.DataFrame, partition:int, total_partitions: int=50):
+def get_partition(df: pd.DataFrame, partition:int, total_partitions: int=40):
   chunk_size = len(df) // total_partitions + 1
 
   return df[partition*chunk_size:(partition+1)*chunk_size]
