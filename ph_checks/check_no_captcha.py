@@ -34,7 +34,10 @@ def main(df, partition):
   df = df.copy()
 
   options = webdriver.ChromeOptions()
-  # options.add_argument("--headless")
+  options.add_argument("--headless")
+  options.add_argument("--no-sandbox")
+  options.add_argument("--disable-dev-shm-usage")
+  options.add_argument("--window-size=1920,1200")
   driver = webdriver.Chrome(options=options)
   driver.implicitly_wait(5)
 
@@ -68,11 +71,11 @@ if __name__ == '__main__':
   load_dotenv()
 
   loader = Loader()
-  loader.decrypt_file('car_plates.csv')
+  # loader.decrypt_file('car_plates.csv')
 
   df = pd.read_csv('car_plates.csv')
 
-  df = df[:4000]
+  df = df[:100]
 
   parser = argparse.ArgumentParser()
   parser.add_argument('--partition', type=int, help='Partition number')
