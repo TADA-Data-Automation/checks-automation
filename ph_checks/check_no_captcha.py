@@ -71,11 +71,11 @@ if __name__ == '__main__':
   load_dotenv()
 
   loader = Loader()
-  # loader.decrypt_file('car_plates.csv')
+  loader.decrypt_file('car_plates.csv')
 
   df = pd.read_csv('car_plates.csv')
 
-  df = df[:100]
+  df = df[:4000]
 
   parser = argparse.ArgumentParser()
   parser.add_argument('--partition', type=int, help='Partition number')
