@@ -4,17 +4,22 @@ audi,a1,audi a1,0
 audi,a2,audi a2,0
 audi,a3,audi a3,0
 audi,q2,audi q2,0
-audi,q3,audi q3,0
 bmw,116d,bmw 116d,0
 bmw,216d,bmw 216d,0
+bmw,216d active tourer,bmw 216d active tourer,0
 bmw,216i,bmw 216i,0
 bmw,218i,bmw 218i,0
+bmw,218i active tourer,bmw 218i active tourer,0
 byd,atto 3,byd atto 3,0
 byd,b6,byd b6,0
 byd,e6,byd e6,0
-cheverolet,sonic,cheverolet sonic,0
+chevrolet,aveo,chevrolet aveo,0
 chevrolet,cruze,chevrolet cruze,0
+chevrolet,sonic,chevrolet sonic,0
+citroen,c3,citroen c3,0
 citroen,c4,citroen c4,0
+citroen,c4 picasso,citroen c4 picasso,0
+citroen,c5,citroen c5,0
 citroen,ds5,citroen ds5,0
 daihatsu,materia,daihatsu materia,0
 ford,focus,ford focus,0
@@ -53,9 +58,11 @@ kia,niro,kia niro,0
 kia,niro,kia niro hybrid,0
 kia,niro,kia niro plus,0
 kia,optima,kia optima,0
+kia,rio,kia rio,0
 kia,seltos,kia seltos,0
 kia,sonet,kia sonet,0
 kia,sorento,kia sorento,0
+kia,soul,kia soul,0
 kia,stinger,kia stinger,0
 kia,stonic,kia stonic,0
 lexus,ct200,lexus ct200,0
@@ -72,6 +79,7 @@ mazda,3,mazda 3,0
 mazda,3,mazda 3 4-door sedan,0
 mazda,3,mazda 3 mild hybrid,0
 mazda,6,mazda 6,0
+mazda,axela,mazda axela,0
 mazda,cx-3,mazda cx-3,0
 mazda,cx-30,mazda cx-30,0
 mazda,cx-5,mazda cx-5,0
@@ -79,12 +87,15 @@ mazda,cx-8,mazda cx-8,0
 mazda,3,mazda3,0
 mazda,3,mazda3 4-door sedan,0
 mercedes-benz,a180,mercedes a180,0
-mercedes-benz,a180,mercedes-benz a180,0
+mercedes-benz,a180,mercedes benz a180,0
+mercedes-benz,gla180,mercedes benz gla180,0
 mg,5,mg 5,0
 mg,5,mg mg5,0
-mg,zs ev,mg zs ev,0
+mg,zs,mg zs,0
+mg,zs,mg zs ev,0
 mg,5,mg5,0
 mg,5,mg5 strides,0
+mini,cooper countryman,mini cooper countryman,0
 mini,one,mini one 5dr,0
 mitsubishi,asx,mitsubishi asx,0
 mitsubishi,attrage,mitsubishi attrage,0
@@ -95,8 +106,10 @@ mitsubishi,space star,mitsubishi space star,0
 nissan,kicks,nissan kicks,0
 nissan,latio,nissan latio,0
 nissan,leaf,nissan leaf,0
+nissan,murano,nissan murano,0
 nissan,note,nissan note,0
 nissan,note,nissan note hybrid,0
+nissan,pulsar,nissan pulsar,0
 nissan,qashqai,nissan qashqai,0
 nissan,sunny,nissan sunny,0
 nissan,sylphy,nissan sylphy,0
@@ -104,6 +117,7 @@ nissan,sylphy,nissan sylphy 1.6,0
 nissan,teana,nissan teana,0
 nissan,x-trail,nissan x-trail,0
 opel,astra,opel astra hatchback,0
+opel,crossland,opel crossland,0
 opel,grandland,opel grandland,0
 opel,insignia,opel insignia grand sport,0
 opel,mokka,opel mokka,0
@@ -115,7 +129,6 @@ peugeot,3008,peugeot 3008,0
 peugeot,308,peugeot 308,0
 renault,captur,renault captur,0
 renault,fluence,renault fluence,0
-renault,grand scenic,renault grand scenic,0
 renault,kadjar,renault kadjar,0
 renault,latitude,renault latitude,0
 renault,megane,renault megane,0
@@ -133,24 +146,32 @@ skoda,superb,skoda superb,0
 ssangyong,tivoli,ssangyong tivoli,0
 subaru,forester,subaru forester,0
 subaru,impreza,subaru impreza,0
+subaru,legacy,subaru legacy,0
+subaru,levorg,subaru levorg,0
 subaru,xv,subaru xv,0
 suzuki,ciaz,suzuki ciaz,0
 suzuki,swift,suzuki swift,0
 suzuki,sx4,suzuki sx4,0
+suzuki,sx4,suzuki sx4 s-cross,0
 suzuki,vitara,suzuki vitara,0
 toyota,allion,toyota allion,0
 toyota,altis,toyota altis,0
 toyota,aqua,toyota aqua,0
 toyota,aqua,toyota aqua hybrid,0
 toyota,axio,toyota axio,0
+toyota,chr,toyota c-hr,0
+toyota,chr,toyota c-hr hybrid,0
 toyota,camry,toyota camry,0
 toyota,chr,toyota chr,0
 toyota,chr,toyota chr hybrid,0
-toyota,altis,toyota corolla altis,0
+toyota,corolla,toyota corolla altis,0
+toyota,corolla,toyota corolla cross,0
+toyota,corolla,toyota corolla fielder,0
 toyota,cross,toyota cross,0
 toyota,harrier,toyota harrier,0
 toyota,premio,toyota premio,0
 toyota,prius,toyota prius,0
+toyota,prius,toyota prius c,0
 toyota,prius,toyota prius hybrid,0
 toyota,raize,toyota raize,0
 toyota,rav4,toyota rav4,0
@@ -163,17 +184,22 @@ volkswagen,passat,volkswagen passat,0
 volkswagen,polo,volkswagen polo,0
 volkswagen,tiguan,volkswagen tiguan,0
 volvo,c30,volvo c30,0
-volvo,v60,volvo cv60,0
 volvo,s60,volvo s60,0
 volvo,v40,volvo v40,0
+volvo,v50,volvo v50,0
+volvo,v60,volvo v60,0
 volvo,v90,volvo v90,0
 volvo,xc40,volvo xc40,0
 volvo,xc60,volvo xc60,0
-bmw,216d,bmw 216d,1
-bmw,216i gran tourer,bmw 216i gran tourer,1
-chevrolet,orlando,cheverolet orlando,1
-citroen,c4 picasso,citroen c4 picasso,1
+bmw,216d grand tourer,bmw 216d grand tourer,1
+bmw,216i grand tourer,bmw 216i grand tourer,1
+bmw,218i grand tourer,bmw 218i grand tourer,1
+bmw,x5 6 seater,bmw x5 6 seater,1
+chevrolet,orlando,chevrolet orlando,1
 citroen,c4 picasso,citroen c4 grand picasso,1
+citroen,c4 picasso,citroen c4 picasso,1
+daihatsu,terious,daihatsu terios,1
+ford,s-max,ford s-max,1
 honda,freed,honda freed,1
 honda,freed,honda freed hybrid,1
 honda,jade,honda jade,1
@@ -182,9 +208,12 @@ honda,odyssey,honda odyssey,1
 honda,stepwagon,honda stepwagon,1
 honda,stepwagon,honda stepwagon spada,1
 honda,stream,honda stream,1
+hyundai,santa fe,hyundai santa fe,1
 kia,carens,kia carens,1
 kia,carnival,kia carnival,1
 kia,sorento,kia sorento,1
+land rover,discovery,land rover discovery,1
+land rover,discovery sport,land rover discovery sport,1
 mazda,5,mazda 5,1
 mazda,8,mazda 8,1
 mitsubishi,grandis,mitsubishi grandis,1
@@ -192,27 +221,25 @@ mitsubishi,outlander,mitsubishi outlander,1
 opel,zafira,opel zafira,1
 peugeot,5008,peugeot 5008,1
 proton,exora,proton exora,1
+renault,grand scenic,renault grand scenic,1
 ssangyong,stavic,ssangyong stavic,1
+suzuki,apv,suzuki apv,1
 toyota,avanza,toyota avanza,1
 toyota,estima,toyota estima,1
 toyota,innova,toyota innova,1
 toyota,isis,toyota isis,1
 toyota,passo sette,toyota passo sette,1
 toyota,picnic,toyota picnic,1
+toyota,previa,toyota previa,1
 toyota,prius plus,toyota prius +,1
 toyota,prius alpha,toyota prius alpha,1
 toyota,prius plus,toyota prius plus,1
 toyota,sienta,toyota sienta,1
 toyota,wish,toyota wish,1
-volvo,xc90,volvo xc90,1
 volkswagen,touran,volkswagen touran,1
-bmw,x1,bmw x1,4
-bmw,x5,bmw x5,4
-bmw,218i,bmw 218i,4
+volvo,xc90,volvo xc90,1
 chrysler,grand voyager,chrysler grand voyager,4
 hyundai,starex,hyundai starex,4
-land rover,discovery,land rover discovery,4
-land rover,discovery,land rover discovery sport,4
 london,tx4,london tx4,4
 mazda,biante,mazda biante,4
 mercedes-benz,glb200,mercedes benz glb200,4
@@ -243,6 +270,7 @@ audi,a6,audi a6,13
 audi,a7,audi a7,13
 audi,a8,audi a8,13
 audi,a8l,audi a8l,13
+audi,q3,audi q3,13
 audi,q5,audi q5,13
 audi,q7,audi q7,13
 audi,s3,audi s3,13
@@ -264,7 +292,9 @@ bmw,535i,bmw 535i,13
 bmw,730li,bmw 730li,13
 bmw,740li,bmw 740li,13
 bmw,active hybrid 5,bmw active hybrid 5,13
+bmw,x1,bmw x1,13
 bmw,x4,bmw x4,13
+bmw,x5,bmw x5,13
 bmw,x6,bmw x6,13
 chrysler,300,chrysler 300,13
 chrysler,300c,chrysler 300c,13
@@ -286,7 +316,11 @@ lexus,gs300,lexus gs300,13
 lexus,gs350,lexus gs350,13
 lexus,gs450,lexus gs450,13
 lexus,gs450h,lexus gs450h,13
+lexus,is200t,lexus is200t,13
+lexus,is250,lexus is250,13
 lexus,ls,lexus ls,13
+lexus,ls350,lexus ls350,13
+lexus,ls500,lexus ls500,13
 lexus,nx200t,lexus nx200t,13
 lexus,rx200t,lexus rx200t,13
 lexus,rx350,lexus rx350,13
@@ -296,6 +330,7 @@ mercedes-benz,b180,mercedes benz b180,13
 mercedes-benz,c180,mercedes benz c180,13
 mercedes-benz,c180,mercedes benz c180k,13
 mercedes-benz,c200,mercedes benz c200,13
+mercedes-benz,c200,mercedes benz c220,13
 mercedes-benz,c350,mercedes benz c350e,13
 mercedes-benz,cla 180,mercedes benz cla 180,13
 mercedes-benz,cla 200,mercedes benz cla 200,13
@@ -306,11 +341,13 @@ mercedes-benz,e200,mercedes benz e200,13
 mercedes-benz,e200,mercedes benz e200k,13
 mercedes-benz,e220,mercedes benz e220,13
 mercedes-benz,e220d,mercedes benz e220d,13
+mercedes-benz,e230,mercedes benz e230,13
 mercedes-benz,e250,mercedes benz e250,13
 mercedes-benz,e280,mercedes benz e280,13
 mercedes-benz,e300,mercedes benz e300,13
 mercedes-benz,e320,mercedes benz e320,13
 mercedes-benz,e350e,mercedes benz e350e,13
+mercedes-benz,glc200,mercedes benz glc200,13
 mercedes-benz,s350l,mercedes benz s350l,13
 mercedes-benz,s400l,mercedes benz s400l,13
 mercedes-benz,s500l,mercedes benz s500l,13
@@ -320,6 +357,7 @@ mitsuoka,nouera,mitsuoka nouera,13
 porsche,cayenne,porsche cayenne,13
 porsche,panamera,porsche panamera,13
 range rover,sport,range rover sport,13
+skoda,superb,skoda superb,13
 skoda,supreme,skoda supreme,13
 tesla,model 3,tesla model 3,13
 tesla,model y,tesla model y,13
