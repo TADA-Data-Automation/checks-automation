@@ -66,6 +66,7 @@ jobs:
       - name: Create .env file
         run: |
           echo "VL_URL=${{ secrets.VL_URL }}" >> .env
+          echo "GO_URL=${{ secrets.GO_URL }}" >> .env
           echo "FERNET_KEY=${{ secrets.FERNET_KEY }}" >> .env
 
       - uses: actions/cache@v4
