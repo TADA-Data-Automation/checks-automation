@@ -57,6 +57,8 @@ def get_expiry(table: pd.DataFrame, driver_type: str):
     return pd.NA
 
 def retrieve_go(driver, vl_id: str, driver_type: str):
+  driver.get(os.getenv('GO_URL'))
+
   driver.find_element(By.XPATH, '//*[@id="_ltalicenceenquiry_WAR_foblsportlet_licNumber"]').send_keys(vl_id)
   driver.find_element(By.XPATH, '//*[@id="_ltalicenceenquiry_WAR_foblsportlet_submit"]').click()
   try:
@@ -113,8 +115,6 @@ def main(partition: int):
         drivers.loc[index, 'expiry'] = expiry
 
   finally:
-    driver.get(os.getenv('GO_URL'))
-
     for index, row in drivers.loc[drivers['expiry'].isna()].iterrows():
       expiry = retrieve_go(driver, row['vl_id'], row['type'])
       if not pd.isna(expiry):
