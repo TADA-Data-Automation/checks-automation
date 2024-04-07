@@ -88,7 +88,8 @@ def main():
 
   drivers = df.sample(n=500, ignore_index=True)
   drivers.insert(6,'expiry',pd.NA)
-  drivers.insert(7,'remarks',pd.NA)
+  drivers.insert(7,'source',pd.NA)
+  drivers.insert(8,'remarks',pd.NA)
   drivers.loc[drivers["birth"].isna(), "remarks"] = "Missing birth date"
   drivers.loc[drivers["nric"].isna(), "remarks"] = "Missing NRIC"
 
@@ -106,13 +107,15 @@ def main():
         drivers.loc[index, 'remarks'] = 'No record found'
       else:
         drivers.loc[index, 'expiry'] = expiry
+        drivers.loc[index, 'source'] = "LTA"
 
   finally:
     for index, row in drivers.loc[drivers['expiry'].isna()].iterrows():
       expiry = retrieve_go(driver, row['vl_id'], row['type'])
       if not pd.isna(expiry):
         drivers.loc[index, 'expiry'] = expiry
-        drivers.loc[index, 'remarks'] = 'From GoBusiness'
+        drivers.loc[index, 'source'] = "GoBusiness"
+        drivers.loc[index, 'remarks'] = pd.NA
 
     drivers.loc[(drivers.vl_expiry_date != drivers.expiry) & drivers.remarks.isna(), "remarks"] = 'Mismatched expiry'
 
