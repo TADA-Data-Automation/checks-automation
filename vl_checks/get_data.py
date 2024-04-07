@@ -17,7 +17,8 @@ def main(encrypt:bool):
       type,
       nric,
       TO_CHAR(birth, 'DD-MM-YYYY') AS birth,
-      TO_CHAR(vl_expiry_date, 'DD-MM-YYYY') AS vl_expiry_date
+      TO_CHAR(vl_expiry_date, 'DD-MM-YYYY') AS vl_expiry_date,
+      vl_id
   FROM tada_member_service.driver
   WHERE approved = true
     AND banned = false

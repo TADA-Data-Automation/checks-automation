@@ -48,15 +48,37 @@ def retrieve_date(driver, nric: str, birthday: str, driver_type: str):
 
 def get_expiry(table: pd.DataFrame, driver_type: str):
   if driver_type in ['PRIVATE_HIRE','HOURLY_RENTAL']:
-    if not table[(table.Status == 'Revoked') & (table['VL Type'].isin(["Taxi Driver's Vocational Licence (TDVL)", "Private Hire Car Driver's Vocational Licence (PDVL)"]))].empty:
-      return 0
     df = table[(table.Status == 'Valid') & (table['VL Type'].isin(["Taxi Driver's Vocational Licence (TDVL)", "Private Hire Car Driver's Vocational Licence (PDVL)"]))]
     return df["Expiry Date"].max()
   elif driver_type == 'TAXI':
     df = table[(table.Status == 'Valid') & (table['VL Type'] == "Taxi Driver's Vocational Licence (TDVL)")]
     return df['Expiry Date'].max()
   else:
-    return -1
+    return pd.NA
+
+def retrieve_go(driver, vl_id: str, driver_type: str):
+  driver.find_element(By.XPATH, '//*[@id="_ltalicenceenquiry_WAR_foblsportlet_licNumber"]').send_keys(vl_id)
+  driver.find_element(By.XPATH, '//*[@id="_ltalicenceenquiry_WAR_foblsportlet_submit"]').click()
+  try:
+    driver.find_element(By.XPATH, '//*[@id="_ltalicenceenquiry_WAR_foblsportlet_driverDtlsesSearchContainerSearchContainer"]/table/tbody/tr[1]/td[2]/a').click()
+    div = BeautifulSoup(driver.find_element(By.TAG_NAME, 'table').get_attribute('outerHTML'),'html.parser')
+    table = pd.read_html(StringIO(str(div)))[0]
+
+    table[['Issue Date','Expiry Date']] = table[['Issue Date','Expiry Date']].apply(pd.to_datetime)
+
+    return get_expiry_go(table, driver_type)
+  except:
+    return pd.NA
+
+def get_expiry_go(table: pd.DataFrame, driver_type: str):
+  if driver_type in ['PRIVATE_HIRE','HOURLY_RENTAL']:
+    df = table[(table.Status == 'Valid') & (table['Description'].isin(["Taxi Driver's Vocational Licence (TDVL)", "Private Hire Car Driver's Vocational Licence (PDVL)"]))]
+    return df["Expiry Date"].max().strftime('%d-%m-%Y')
+  elif driver_type == 'TAXI':
+    df = table[(table.Status == 'Valid') & (table['Description'] == "Taxi Driver's Vocational Licence (TDVL)")]
+    return df['Expiry Date'].max().strftime('%d-%m-%Y')
+  else:
+    return pd.NA
   
 def get_partition(df: pd.DataFrame, partition:int, total_partitions: int=15):
   chunk_size = len(df) // total_partitions + 1
@@ -72,8 +94,8 @@ def main(partition: int):
   df = pd.read_csv('drivers.csv')
 
   drivers = get_partition(df, partition)
-  drivers.insert(5,'expiry',pd.NA)
-  drivers.insert(6,'remarks',pd.NA)
+  drivers.insert(6,'expiry',pd.NA)
+  drivers.insert(7,'remarks',pd.NA)
   drivers.loc[drivers["birth"].isna(), "remarks"] = "Missing birth date"
   drivers.loc[drivers["nric"].isna(), "remarks"] = "Missing NRIC"
 
@@ -87,12 +109,18 @@ def main(partition: int):
       expiry = retrieve_date(driver,row['nric'],row['birth'],row['type'])
       if pd.isna(expiry):
         drivers.loc[index, 'remarks'] = 'No record found'
-      elif expiry == 0:
-        drivers.loc[index, 'remarks'] = 'Revoked'
       else:
         drivers.loc[index, 'expiry'] = expiry
 
   finally:
+    driver.get(os.getenv('GO_URL'))
+
+    for index, row in drivers.loc[drivers['expiry'].isna()].iterrows():
+      expiry = retrieve_go(driver, row['vl_id'], row['type'])
+      if not pd.isna(expiry):
+        drivers.loc[index, 'expiry'] = expiry
+        drivers.loc[index, 'remarks'] = 'From GoBusiness'
+
     drivers.loc[(drivers.vl_expiry_date != drivers.expiry) & drivers.remarks.isna(), "remarks"] = 'Mismatched expiry'
     drivers.to_csv(f'data/vl_monthly_{time.strftime("%b")}_{partition}.csv', index=False)
 
