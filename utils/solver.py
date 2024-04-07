@@ -3,6 +3,7 @@ import subprocess
 
 from PIL import Image
 from pytesseract import image_to_string
+from security import safe_command
 
 
 def decode_captcha(filename: str) -> str:
@@ -10,7 +11,7 @@ def decode_captcha(filename: str) -> str:
 
   command = f'convert {filename} -colorspace gray -separate -average -threshold 60% -negate -morphology Thinning "Ridges" -negate output.png'
 
-  subprocess.run(command.split(), check=True)
+  safe_command.run(subprocess.run, command.split(), check=True)
 
   # read the image
   image = Image.open('output.png')
