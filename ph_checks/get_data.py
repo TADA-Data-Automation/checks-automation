@@ -4,30 +4,18 @@ import time
 import pandas as pd
 from dotenv import load_dotenv
 
-from utils.helpers import Postgres
+from utils.helpers import Query, Redash
 from utils.loader import Loader
 from utils.slack import SlackBot
 
 
 def main():
-  pg = Postgres()
   loader = Loader()
   bot = SlackBot()
 
-  query = """
-  SELECT
-    d.id,
-    UPPER(car.plate) as car_plate
-  FROM tada_member_service.driver d JOIN tada_member_service.vehicle car ON (car.id = d.default_vehicle_id)
-  WHERE banned = false
-    AND test_account = false
-    AND approved = true
-    AND region = 'SG'
-    AND d.type = 'PRIVATE_HIRE'
-  ORDER BY RANDOM()
-  """
-
-  df = pg.to_pandas(query)
+  redash = Redash(os.getenv('REDASH_API_KEY'), os.getenv('REDASH_BASE_URL'))
+  redash.run_query(Query(2984))
+  df = redash.get_result(2984)
 
   df = df.dropna()
 

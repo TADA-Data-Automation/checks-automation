@@ -4,31 +4,15 @@ import os
 import pandas as pd
 from dotenv import load_dotenv
 from selenium import webdriver
-from selenium.webdriver.common.by import By
 
 from utils.loader import Loader
+from utils.ph import fill_form
 
 
 def get_partition(df: pd.DataFrame, partition:int, total_partitions: int=40):
   chunk_size = len(df) // total_partitions + 1
 
   return df[partition*chunk_size:(partition+1)*chunk_size]
-
-def fill_form(driver, car_plate):
-  driver.get(os.getenv('PH_URL'))
-  vehicle_input = driver.find_element(By.XPATH, '/html/body/section/div[3]/div[4]/div[2]/div[2]/form/div/div[3]/div[2]/div/div/div/div/div/p/input')
-  checkbox = driver.find_element(By.XPATH, '/html/body/section/div[3]/div[4]/div[2]/div[2]/form/div/div[5]/div/label/span[3]')
-  submit_button = driver.find_element(By.XPATH, '/html/body/section/div[3]/div[4]/div[2]/div[2]/form/div/div[6]/button')
-
-  vehicle_input.send_keys(car_plate)
-  checkbox.click()
-  submit_button.click()
-
-  try:
-    err = driver.find_element(By.XPATH, '/html/body/section/div[3]/div[4]/div[2]/div[2]/form/div/div[6]/div/table/tbody/tr/td/ul/li').text
-    return False
-  except:
-    return True
 
 def main(df, partition):
   df = df.copy()
@@ -37,28 +21,17 @@ def main(df, partition):
   options.add_argument("--headless")
   options.add_argument("--no-sandbox")
   options.add_argument("--disable-dev-shm-usage")
-  options.add_argument("--window-size=1920,1200")
   driver = webdriver.Chrome(options=options)
-  driver.implicitly_wait(5)
+  driver.get(os.getenv('PH_URL'))
 
-  # fill in the form
   for i, row in df.iterrows():
-    if not fill_form(driver, row['car_plate']):
-      df.at[i,'phv'] = -1
-      continue
-    
-    try:
-      status = driver.find_element(By.XPATH, '/html/body/section/div[3]/div[4]/div[2]/div[2]/form/div[2]/div[2]/div/div/div/div[1]/div[2]/p[2]').text
+    status, decal = fill_form(driver, row['car_plate'])
 
-      if status == 'Yes':
-        df.at[i,'phv'] = 1
-        df.at[i,'decal'] = driver.find_element(By.XPATH, '/html/body/section/div[3]/div[4]/div[2]/div[2]/form/div[2]/div[2]/div/div/div/div[2]/div[2]/p[2]').text
-      else:
-        df.at[i,'phv'] = 0
-    except:
-      df.at[i,'phv'] = -2
+    df.at[i,'phv'] = status
+    if status == 1:
+      df.at[i,'decal'] = decal
 
-  driver.quit()
+    driver.quit()
 
   # check if file exists
   if not os.path.isfile(f'data/ph_check_{partition}.csv'):
