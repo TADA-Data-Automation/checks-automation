@@ -7,8 +7,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 def fill_form(driver, car_plate):
   wait = WebDriverWait(driver, 5)
   vehicle_input = wait.until(EC.presence_of_element_located((By.XPATH, '//*[@id="vehicleNo"]')))
-  checkbox = wait.until(EC.element_to_be_clickable(By.XPATH, '//*[@id="agreeTCbox"]'))
-  submit_button = wait.until(EC.element_to_be_clickable(By.XPATH, '//*[@id="button"]'))
+  checkbox = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="agreeTCbox"]')))
+  submit_button = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="button"]')))
 
   vehicle_input.clear()
   vehicle_input.send_keys(car_plate)
@@ -21,7 +21,7 @@ def fill_form(driver, car_plate):
     status = wait.until(EC.presence_of_element_located((By.XPATH, '//*[@id="pnlBdyVehicleList"]/div/div/div/div[1]/div[2]/p[2]'))).text
     decal = driver.find_element(By.XPATH, '//*[@id="pnlBdyVehicleList"]/div/div/div/div[2]/div[2]/p[2]').text
 
-    button = wait.until(EC.element_to_be_clickable(By.XPATH, '//*[@id="main-content"]/div[2]/div[2]/form/div[4]/div[1]/button[2]'))
+    button = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="main-content"]/div[2]/div[2]/form/div[4]/div[1]/button[2]')))
 
     button.click()
 
