@@ -9,7 +9,7 @@ from utils.loader import Loader
 from utils.ph import fill_form
 
 
-def get_partition(df: pd.DataFrame, partition:int, total_partitions: int=40):
+def get_partition(df: pd.DataFrame, partition:int, total_partitions: int=5):
   chunk_size = len(df) // total_partitions + 1
 
   return df[partition*chunk_size:(partition+1)*chunk_size]
@@ -49,7 +49,7 @@ if __name__ == '__main__':
 
   df = pd.read_csv('car_plates.csv')
 
-  df = df[:1000]
+  df = df[:150]
 
   parser = argparse.ArgumentParser()
   parser.add_argument('--partition', type=int, help='Partition number')
