@@ -19,9 +19,13 @@ def main(df, partition):
 
   options = webdriver.ChromeOptions()
   options.add_argument("--headless=new")
-  options.add_argument("--no-sandbox")
-  options.add_argument("--disable-dev-shm-usage")
+  options.add_argument('--no-sandbox')
   options.add_argument("--disable-gpu")
+  options.add_argument("--window-size=1280x1696")
+  options.add_argument("--single-process")
+  options.add_argument("--disable-dev-shm-usage")
+  options.add_argument("--disable-dev-tools")
+  options.add_argument("--no-zygote")
   driver = webdriver.Chrome(options=options)
   driver.get(os.getenv('PH_URL'))
 
