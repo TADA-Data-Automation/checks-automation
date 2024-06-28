@@ -67,11 +67,6 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.11' # install the python version needed
-      
-      - name: Install Tesseract-OCR
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y tesseract-ocr
 
       - name: Create .env file
         run: |
