@@ -17,6 +17,8 @@ def get_partition(df: pd.DataFrame, partition:int, total_partitions: int=5):
 
 def main(df, partition):
   df = df.copy()
+  df['phv'] = None
+  df['decal'] = None
 
   options = webdriver.ChromeOptions()
   options.add_argument("--window-size=1200x1200")
@@ -36,6 +38,9 @@ def main(df, partition):
         df.at[i,'decal'] = decal
 
     driver.quit()
+
+  except:
+    pass
   
   finally:
     # check if file exists
