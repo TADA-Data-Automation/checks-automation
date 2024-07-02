@@ -18,11 +18,11 @@ def get_partition(df: pd.DataFrame, partition:int, total_partitions: int=5):
 def main(df, partition):
   df = df.copy()
 
-  display = Display(visible=True, size=(800, 600))
+  display = Display(visible=True, size=(800, 800))
   display.start()
 
   options = webdriver.ChromeOptions()
-  options.add_argument("--window-size=1280x1696")
+  options.add_argument("--window-size=1200x1200")
   options.add_argument("--ignore-certificate-errors")
   driver = webdriver.Chrome(options=options)
 

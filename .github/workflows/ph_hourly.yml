@@ -82,6 +82,9 @@ jobs:
 
       - name: install xvfb
         run: sudo apt-get install xvfb xserver-xephyr tigervnc-standalone-server x11-utils gnumeric
+
+      - name: start xephyr
+        run: Xephyr -ac -br -noreset -screen 1280x1024 :1 &
       
       - name: install python packages
         run: |
