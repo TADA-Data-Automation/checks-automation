@@ -16,6 +16,7 @@ PySocks==1.7.1
 python-dateutil==2.9.0.post0
 python-dotenv==1.0.1
 pytz==2024.1
+PyVirtualDisplay==3.0
 rapidfuzz==3.9.3
 requests==2.32.3
 security==1.3.0

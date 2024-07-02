@@ -79,6 +79,9 @@ jobs:
           key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
           restore-keys: |
             ${{ runner.os }}-pip-
+
+      - name: install xvfb
+        run: sudo apt-get install xvfb
       
       - name: install python packages
         run: |

@@ -1,3 +1,5 @@
+import os
+
 import pandas as pd
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
@@ -7,8 +9,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 def fill_form(driver, car_plate):
   wait = WebDriverWait(driver, 5)
   vehicle_input = wait.until(EC.presence_of_element_located((By.XPATH, '//*[@id="vehicleNo"]')))
-  checkbox = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="agreeTCbox"]')))
-  submit_button = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="button"]')))
+  checkbox = driver.find_element(By.XPATH, '//*[@id="agreeTCbox"]')
+  submit_button = driver.find_element(By.XPATH, '//*[@id="button"]')
 
   vehicle_input.clear()
   vehicle_input.send_keys(car_plate)
@@ -21,7 +23,7 @@ def fill_form(driver, car_plate):
     status = wait.until(EC.presence_of_element_located((By.XPATH, '//*[@id="pnlBdyVehicleList"]/div/div/div/div[1]/div[2]/p[2]'))).text
     decal = driver.find_element(By.XPATH, '//*[@id="pnlBdyVehicleList"]/div/div/div/div[2]/div[2]/p[2]').text
 
-    button = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="main-content"]/div[2]/div[2]/form/div[4]/div[1]/button[2]')))
+    button = driver.find_element(By.XPATH, '//*[@id="main-content"]/div[2]/div[2]/form/div[4]/div[1]/button[2]')
 
     button.click()
 
@@ -39,31 +41,29 @@ def preprocess(df, checked):
 
     merged = df.merge(checked, on='car_plate', how='left')
     merged['phv'] = merged['phv'].astype('Int64')
-    merged = merged.drop_duplicates()
+    merged = merged.drop_duplicates().reset_index(drop=True)
 
-    df = merged[merged['phv'].isna()]
+    df = merged[merged['phv'].isna()].reset_index(drop=True)
 
     df_checked = merged[(~merged['phv'].isna()) & (merged['phv'] >= 0)]
-    df_checked = df_checked.sort_values(by='phv')
+    df_checked = df_checked.sort_values(by='phv').reset_index(drop=True)
 
-    if len(df) < 50:
-      remaining = 50 - len(df)
+    if len(df) < 30:
+      remaining = 30 - len(df)
       to_check = df_checked.sort_values(['phv', 'updated_at']).drop(columns=['updated_at'])
 
       df = pd.concat([df, to_check[:remaining]])
+    
+    return df.copy(), df_checked.copy()
   
-  return df.copy(), checked if checked is not None else df.copy()
+  return df.copy(), df.copy()
 
 def process_results(df, prev):
-  unknown = df[df['phv'] < 0]
+  df['phv'] = df['phv'].astype('Int64')
+  df['updated_at'] = pd.to_datetime('today').date()
+
   known  = df[df['phv'] >= 0]
-
-  df1 = pd.concat([unknown, prev])
-
-  df1 = df1.sort_values(['phv', 'updated_at'])
-  df1 = df1.drop_duplicates(['id', 'car_plate'], keep='last')
-
-  df1 = pd.concat([df1, known])
+  df1 = pd.concat([prev, known])
 
   # convert updated_at to date
   df1['updated_at'] = pd.to_datetime(df1['updated_at']).dt.date

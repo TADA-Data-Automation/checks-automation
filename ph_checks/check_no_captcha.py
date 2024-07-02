@@ -3,6 +3,7 @@ import os
 
 import pandas as pd
 from dotenv import load_dotenv
+from pyvirtualdisplay import Display
 from selenium import webdriver
 
 from utils.loader import Loader
@@ -17,32 +18,32 @@ def get_partition(df: pd.DataFrame, partition:int, total_partitions: int=5):
 def main(df, partition):
   df = df.copy()
 
+  display = Display(visible=0, size=(800, 600))
+  display.start()
+
   options = webdriver.ChromeOptions()
-  options.add_argument("--headless=new")
-  options.add_argument('--no-sandbox')
-  options.add_argument("--disable-gpu")
   options.add_argument("--window-size=1280x1696")
-  options.add_argument("--single-process")
-  options.add_argument("--disable-dev-shm-usage")
-  options.add_argument("--disable-dev-tools")
-  options.add_argument("--no-zygote")
+  options.add_argument("--ignore-certificate-errors")
   driver = webdriver.Chrome(options=options)
-  driver.get(os.getenv('PH_URL'))
 
-  for i, row in df.iterrows():
-    status, decal = fill_form(driver, row['car_plate'])
+  try:
+    driver.get(os.getenv('PH_URL'))
 
-    df.at[i,'phv'] = status
-    if status == 1:
-      df.at[i,'decal'] = decal
+    for i, row in df.iterrows():
+      status, decal = fill_form(driver, row['car_plate'])
+
+      df.at[i,'phv'] = status
+      if status == 1:
+        df.at[i,'decal'] = decal
 
     driver.quit()
-
-  # check if file exists
-  if not os.path.isfile(f'data/ph_check_{partition}.csv'):
-    df.to_csv(f'data/ph_check_{partition}.csv', index=False)
-  else:
-    df.to_csv(f'data/ph_check_{partition}.csv', mode='a', header=False, index=False)
+  
+  finally:
+    # check if file exists
+    if not os.path.isfile(f'data/ph_check_{partition}.csv'):
+      df.to_csv(f'data/ph_check_{partition}.csv', index=False)
+    else:
+      df.to_csv(f'data/ph_check_{partition}.csv', mode='a', header=False, index=False)
 
 
 if __name__ == '__main__':
