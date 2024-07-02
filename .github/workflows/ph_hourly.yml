@@ -81,10 +81,12 @@ jobs:
             ${{ runner.os }}-pip-
 
       - name: install xvfb
-        run: sudo apt-get install xvfb xserver-xephyr tigervnc-standalone-server x11-utils gnumeric
+        run: sudo apt-get install xvfb
 
-      - name: start xephyr
-        run: Xephyr -ac -br -noreset -screen 1280x1024 :1 &
+      - name: Start Xvfb
+        run: |
+          Xvfb :99 -screen 0 1920x1080x24 &
+          export DISPLAY=:99
       
       - name: install python packages
         run: |
@@ -97,6 +99,8 @@ jobs:
           name: get-data
       
       - name: execute py script
+        env:
+          DISPLAY: :99
         run: python -m ph_checks.check_no_captcha --partition ${{ matrix.partition }}
 
       - name: upload artifacts
