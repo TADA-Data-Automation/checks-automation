@@ -18,7 +18,7 @@ def get_partition(df: pd.DataFrame, partition:int, total_partitions: int=5):
 def main(df, partition):
   df = df.copy()
 
-  display = Display(visible=0, size=(800, 600))
+  display = Display(visible=True, size=(800, 600))
   display.start()
 
   options = webdriver.ChromeOptions()

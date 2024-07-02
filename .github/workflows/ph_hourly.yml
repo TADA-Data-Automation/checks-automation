@@ -81,7 +81,7 @@ jobs:
             ${{ runner.os }}-pip-
 
       - name: install xvfb
-        run: sudo apt-get install xvfb
+        run: sudo apt-get install xvfb xserver-xephyr tigervnc-standalone-server x11-utils gnumeric
       
       - name: install python packages
         run: |
