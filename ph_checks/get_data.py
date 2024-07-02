@@ -38,8 +38,8 @@ def main():
     bot.deleteLatestMessage(os.getenv('CACHE_CHANNEL'))
     bot.uploadFile('data/checked.csv', os.getenv('CACHE_CHANNEL'), f'Last Updated: {time.strftime("%Y-%m-%d %H:%M:%S")}')
 
-    if len(df) < 150:
-      remaining = 150 - len(df)
+    if len(df) < 1200:
+      remaining = 1200 - len(df)
       to_check = df_checked.sort_values(['phv', 'updated_at']).drop(columns=['updated_at'])
 
       df = pd.concat([df, to_check[:remaining]])
