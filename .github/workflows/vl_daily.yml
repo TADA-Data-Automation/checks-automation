@@ -29,6 +29,8 @@ jobs:
           echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> .env
           echo "VL_URL=${{ secrets.VL_URL }}" >> .env
           echo "GO_URL=${{ secrets.GO_URL }}" >> .env
+          echo "REDASH_BASE_URL=${{ secrets.REDASH_BASE_URL }}" >> .env
+          echo "REDASH_API_KEY=${{ secrets.REDASH_API_KEY }}" >> .env
 
       - name: install python packages
         run: |
