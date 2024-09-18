@@ -13,6 +13,8 @@ from utils.slack import SlackBot
 
 
 def valid_nric(string):
+  if type(string) != str:
+    return False
   if match := re.match(r'^[STFG]\d{7}[A-Z]$', string):
     return True
   else:

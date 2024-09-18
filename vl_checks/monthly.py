@@ -14,6 +14,8 @@ from utils.loader import Loader
 
 
 def valid_nric(string):
+  if type(string) != str:
+    return False
   if match := re.match(r'^[STFG]\d{7}[A-Z]$', string):
     return True
   else:
@@ -82,7 +84,7 @@ def get_expiry_go(table: pd.DataFrame, driver_type: str):
   else:
     return pd.NA
   
-def get_partition(df: pd.DataFrame, partition:int, total_partitions: int=15):
+def get_partition(df: pd.DataFrame, partition:int, total_partitions: int=50):
   chunk_size = len(df) // total_partitions + 1
 
   return df[partition*chunk_size:(partition+1)*chunk_size]
@@ -104,6 +106,8 @@ def main(partition: int):
 
   options = webdriver.ChromeOptions()
   options.add_argument('--headless')
+  options.add_argument("--no-sandbox")  # This make Chromium more stable in a container environment
+  options.add_argument("--disable-dev-shm-usage")  # Overcome limited resource problems
   driver = webdriver.Chrome(options=options)
   driver.get(os.getenv('VL_URL'))
 
