@@ -31,7 +31,7 @@ def retrieve_date(driver, nric: str, birthday: str, driver_type: str):
   dob.send_keys(birthday)
 
   button = driver.find_element(By.XPATH, '//*[@id="proceedBtn"]')
-  button.click()
+  driver.execute_script("arguments[0].click();", button)
 
   while "Loading..." in BeautifulSoup(driver.page_source,'html.parser').select_one('div#license-results'):
     pass

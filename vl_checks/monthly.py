@@ -32,7 +32,7 @@ def retrieve_date(driver, nric: str, birthday: str, driver_type: str):
   dob.send_keys(birthday)
 
   button = driver.find_element(By.XPATH, '//*[@id="proceedBtn"]')
-  button.click()
+  driver.execute_script("arguments[0].click();", button)
 
   while "Loading..." in BeautifulSoup(driver.page_source,'html.parser').select_one('div#license-results'):
     pass
@@ -84,7 +84,7 @@ def get_expiry_go(table: pd.DataFrame, driver_type: str):
   else:
     return pd.NA
   
-def get_partition(df: pd.DataFrame, partition:int, total_partitions: int=50):
+def get_partition(df: pd.DataFrame, partition:int, total_partitions: int=40):
   chunk_size = len(df) // total_partitions + 1
 
   return df[partition*chunk_size:(partition+1)*chunk_size]
