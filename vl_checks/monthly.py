@@ -23,6 +23,8 @@ def valid_nric(string):
     return False
 
 def valid_dob(string):
+  if type(string) != str:
+    return False
   try:
     time.strptime(string, "%d-%m-%Y")
     return True
@@ -31,7 +33,7 @@ def valid_dob(string):
 
 def retrieve_date(driver, nric: str, birthday: str, driver_type: str):
   if not (valid_nric(nric) and valid_dob(birthday)):
-    return pd.NA
+    return ("Invalid NRIC or DOB", pd.NA)
   ic = driver.find_element(By.XPATH, '//*[@id="nric"]')
   ic.clear()
   ic.send_keys(nric)
@@ -48,13 +50,13 @@ def retrieve_date(driver, nric: str, birthday: str, driver_type: str):
   div = BeautifulSoup(driver.page_source,'html.parser').select_one('div#license-results')
 
   if "No record Found" in str(div):
-    return ("No record found", None)
+    return ("No record found", pd.NA)
   else:
     try:
       table = pd.read_html(StringIO(str(div)))[0]
       return get_expiry(table, driver_type)
     except:
-      return ("Unable to read table information", None)
+      return ("Unable to read table information", pd.NA)
 
 def get_expiry(table: pd.DataFrame, driver_type: str):
   if driver_type in ['PRIVATE_HIRE','HOURLY_RENTAL']:
