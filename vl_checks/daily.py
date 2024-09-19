@@ -11,6 +11,7 @@ from selenium.webdriver.common.by import By
 
 from utils.slack import SlackBot
 
+STATUSES = ["Revoked", "Suspended", "Cancelled", "Application Lapsed", "Approved to Attend Course"]
 
 def valid_nric(string):
   if type(string) != str:
@@ -20,8 +21,15 @@ def valid_nric(string):
   else:
     return False
 
+def valid_dob(string):
+  try:
+    time.strptime(string, "%d-%m-%Y")
+    return True
+  except ValueError:
+    return False
+
 def retrieve_date(driver, nric: str, birthday: str, driver_type: str):
-  if not valid_nric(nric):
+  if not (valid_nric(nric) and valid_dob(birthday)):
     return pd.NA
   ic = driver.find_element(By.XPATH, '//*[@id="nric"]')
   ic.clear()
@@ -39,23 +47,34 @@ def retrieve_date(driver, nric: str, birthday: str, driver_type: str):
   div = BeautifulSoup(driver.page_source,'html.parser').select_one('div#license-results')
 
   if "No record Found" in str(div):
-    return pd.NA
+    return ("No record found", None)
   else:
     try:
       table = pd.read_html(StringIO(str(div)))[0]
       return get_expiry(table, driver_type)
     except:
-      return pd.NA
+      return ("Unable to read table information", None)
 
 def get_expiry(table: pd.DataFrame, driver_type: str):
   if driver_type in ['PRIVATE_HIRE','HOURLY_RENTAL']:
-    df = table[(table.Status == 'Valid') & (table['VL Type'].isin(["Taxi Driver's Vocational Licence (TDVL)", "Private Hire Car Driver's Vocational Licence (PDVL)"]))]
-    return df["Expiry Date"].max()
+    df = table[table['VL Type'].isin(["Taxi Driver's Vocational Licence (TDVL)", "Private Hire Car Driver's Vocational Licence (PDVL)"])]
   elif driver_type == 'TAXI':
-    df = table[(table.Status == 'Valid') & (table['VL Type'] == "Taxi Driver's Vocational Licence (TDVL)")]
-    return df['Expiry Date'].max()
+    df = table[table['VL Type'] == "Taxi Driver's Vocational Licence (TDVL)"]
   else:
-    return pd.NA
+    return ("Invalid driver type", pd.NA)
+  
+  if df.empty:
+    return ("No valid record of corresponding license", pd.NA)
+  
+  if not df[df.Status == "Valid"].empty:
+    df = df[df.Status == "Valid"]
+    return (pd.NA, df["Expiry Date"].max())
+  
+  for status in STATUSES:
+    if not df[df.Status == status].empty:
+      return (status, pd.NA)
+  
+  return ("Unknown status found", pd.NA)
 
 def retrieve_go(driver, vl_id: str, driver_type: str):
   driver.get(os.getenv('GO_URL'))
@@ -103,16 +122,19 @@ def main():
   driver.get(os.getenv('VL_URL'))
 
   try:
-    for index, row in drivers.loc[drivers['remarks'].isna()].iterrows():
-      expiry = retrieve_date(driver,row['nric'],row['birth'],row['type'])
+    for index, row in drivers.iterrows():
+      status, expiry = retrieve_date(driver,row['nric'],row['birth'],row['type'])
+      drivers.loc[index, 'source'] = "LTA"
       if pd.isna(expiry):
-        drivers.loc[index, 'remarks'] = 'No record found'
+        drivers.loc[index, 'remarks'] = status
       else:
         drivers.loc[index, 'expiry'] = expiry
-        drivers.loc[index, 'source'] = "LTA"
+
+  except Exception as error:
+    print("An exception occurred:", error)
 
   finally:
-    for index, row in drivers.loc[drivers['expiry'].isna()].iterrows():
+    for index, row in drivers.loc[(drivers['expiry'].isna()) & (~drivers['remarks'].isin(STATUSES))].iterrows():
       expiry = retrieve_go(driver, row['vl_id'], row['type'])
       if not pd.isna(expiry):
         drivers.loc[index, 'expiry'] = expiry
