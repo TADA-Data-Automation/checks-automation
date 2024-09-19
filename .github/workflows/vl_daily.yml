@@ -1,4 +1,4 @@
-name: VL Check Daily
+name: VL Check Daily (500)
 
 # Controls when the workflow will run
 on:

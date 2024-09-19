@@ -1,9 +1,9 @@
-name: VL Check Monthly
+name: VL Check Daily
 
 # Controls when the workflow will run
 on:
   schedule:
-    - cron: '30 23 1 * *'
+    - cron: '0 23 * * *'
   workflow_dispatch:
 
 jobs:
