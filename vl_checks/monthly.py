@@ -60,7 +60,7 @@ def retrieve_date(driver, nric: str, birthday: str, driver_type: str, car_type: 
 
 def get_expiry(table: pd.DataFrame, driver_type: str, car_type: int):
   if driver_type in ['PRIVATE_HIRE','HOURLY_RENTAL']:
-    if car_type == 3001:
+    if not pd.isna(car_type) and car_type == 3001:
       df = table[table['VL Type'] == "Bus Driver's Vocational Licence (BDVL)"]
     else:
       df = table[table['VL Type'].isin(["Taxi Driver's Vocational Licence (TDVL)", "Private Hire Car Driver's Vocational Licence (PDVL)"])]
@@ -100,7 +100,7 @@ def retrieve_go(driver, vl_id: str, driver_type: str, car_type: int):
 
 def get_expiry_go(table: pd.DataFrame, driver_type: str, car_type: int):
   if driver_type in ['PRIVATE_HIRE','HOURLY_RENTAL']:
-    if car_type == 3001:
+    if not pd.isna(car_type) and car_type == 3001:
       df = table[(table.Status == 'Valid') & (table['Description'] == "Bus Driver's Vocational Licence (BDVL)")]
       return df['Expiry Date'].max().strftime('%d-%m-%Y')
     else:
