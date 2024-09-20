@@ -30,7 +30,7 @@ def valid_dob(string):
   except ValueError:
     return False
 
-def retrieve_date(driver, nric: str, birthday: str, driver_type: str):
+def retrieve_date(driver, nric: str, birthday: str, driver_type: str, car_type: int):
   if not (valid_nric(nric) and valid_dob(birthday)):
     return ("Invalid NRIC or DOB", pd.NA)
   ic = driver.find_element(By.XPATH, '//*[@id="nric"]')
@@ -53,13 +53,16 @@ def retrieve_date(driver, nric: str, birthday: str, driver_type: str):
   else:
     try:
       table = pd.read_html(StringIO(str(div)))[0]
-      return get_expiry(table, driver_type)
+      return get_expiry(table, driver_type, car_type)
     except:
       return ("Unable to read table information", pd.NA)
 
-def get_expiry(table: pd.DataFrame, driver_type: str):
+def get_expiry(table: pd.DataFrame, driver_type: str, car_type: int):
   if driver_type in ['PRIVATE_HIRE','HOURLY_RENTAL']:
-    df = table[table['VL Type'].isin(["Taxi Driver's Vocational Licence (TDVL)", "Private Hire Car Driver's Vocational Licence (PDVL)"])]
+    if car_type == 3001:
+      df = table[table['VL Type'] == "Bus Driver's Vocational Licence (BDVL)"]
+    else:
+      df = table[table['VL Type'].isin(["Taxi Driver's Vocational Licence (TDVL)", "Private Hire Car Driver's Vocational Licence (PDVL)"])]
   elif driver_type == 'TAXI':
     df = table[table['VL Type'] == "Taxi Driver's Vocational Licence (TDVL)"]
   else:
@@ -78,7 +81,7 @@ def get_expiry(table: pd.DataFrame, driver_type: str):
   
   return ("Unknown status found", pd.NA)
 
-def retrieve_go(driver, vl_id: str, driver_type: str):
+def retrieve_go(driver, vl_id: str, driver_type: str, car_type: int):
   driver.get(os.getenv('GO_URL'))
 
   driver.find_element(By.XPATH, '//*[@id="_ltalicenceenquiry_WAR_foblsportlet_licNumber"]').send_keys(vl_id)
@@ -90,14 +93,18 @@ def retrieve_go(driver, vl_id: str, driver_type: str):
 
     table[['Issue Date','Expiry Date']] = table[['Issue Date','Expiry Date']].apply(pd.to_datetime)
 
-    return get_expiry_go(table, driver_type)
+    return get_expiry_go(table, driver_type, car_type)
   except:
     return pd.NA
 
-def get_expiry_go(table: pd.DataFrame, driver_type: str):
+def get_expiry_go(table: pd.DataFrame, driver_type: str, car_type: int):
   if driver_type in ['PRIVATE_HIRE','HOURLY_RENTAL']:
-    df = table[(table.Status == 'Valid') & (table['Description'].isin(["Taxi Driver's Vocational Licence (TDVL)", "Private Hire Car Driver's Vocational Licence (PDVL)"]))]
-    return df["Expiry Date"].max().strftime('%d-%m-%Y')
+    if car_type == 3001:
+      df = table[(table.Status == 'Valid') & (table['Description'] == "Bus Driver's Vocational Licence (BDVL)")]
+      return df['Expiry Date'].max().strftime('%d-%m-%Y')
+    else:
+      df = table[(table.Status == 'Valid') & (table['Description'].isin(["Taxi Driver's Vocational Licence (TDVL)", "Private Hire Car Driver's Vocational Licence (PDVL)"]))]
+      return df["Expiry Date"].max().strftime('%d-%m-%Y')
   elif driver_type == 'TAXI':
     df = table[(table.Status == 'Valid') & (table['Description'] == "Taxi Driver's Vocational Licence (TDVL)")]
     return df['Expiry Date'].max().strftime('%d-%m-%Y')
@@ -107,12 +114,12 @@ def get_expiry_go(table: pd.DataFrame, driver_type: str):
 def main():
   load_dotenv()
 
-  df = pd.read_csv('data/drivers.csv')
+  df = pd.read_csv('data/drivers.csv', dtype={'car_type': 'Int64'})
 
   drivers = df.sample(n=500, ignore_index=True)
-  drivers.insert(6,'expiry',pd.NA)
-  drivers.insert(7,'source',pd.NA)
-  drivers.insert(8,'remarks',pd.NA)
+  drivers.insert(7,'expiry',pd.NA)
+  drivers.insert(8,'source',pd.NA)
+  drivers.insert(9,'remarks',pd.NA)
   drivers.loc[drivers["birth"].isna(), "remarks"] = "Missing birth date"
   drivers.loc[drivers["nric"].isna(), "remarks"] = "Missing NRIC"
 
@@ -125,7 +132,7 @@ def main():
 
   try:
     for index, row in drivers.iterrows():
-      status, expiry = retrieve_date(driver,row['nric'],row['birth'],row['type'])
+      status, expiry = retrieve_date(driver, row['nric'], row['birth'], row['type'], row['car_type'])
       drivers.loc[index, 'source'] = "LTA"
       if pd.isna(expiry):
         drivers.loc[index, 'remarks'] = status
@@ -137,7 +144,7 @@ def main():
 
   finally:
     for index, row in drivers.loc[(drivers['expiry'].isna()) & (~drivers['remarks'].isin(STATUSES))].iterrows():
-      expiry = retrieve_go(driver, row['vl_id'], row['type'])
+      expiry = retrieve_go(driver, row['vl_id'], row['type'], row['car_type'])
       if not pd.isna(expiry):
         drivers.loc[index, 'expiry'] = expiry
         drivers.loc[index, 'source'] = "GoBusiness"

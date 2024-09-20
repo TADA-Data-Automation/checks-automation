@@ -1,0 +1,45 @@
+name: VL Check Daily (500)
+
+# Controls when the workflow will run
+on:
+  schedule:
+    - cron: '0 23 * * *'
+  workflow_dispatch:
+
+jobs:
+  run-python-script:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: checkout repo content
+        uses: actions/checkout@v4 # checkout the repository content
+
+      - name: setup python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11' # install the python version needed
+      
+      - name: Create .env file
+        run: |
+          echo "SLACK_TOKEN=${{ secrets.SLACK_TOKEN }}" >> .env
+          echo "SLACK_CHANNEL=${{ secrets.SLACK_CHANNEL }}" >> .env
+          echo "POSTGRES_HOST=${{ secrets.POSTGRES_HOST }}" >> .env
+          echo "POSTGRES_DB=${{ secrets.POSTGRES_DB }}" >> .env
+          echo "POSTGRES_USER=${{ secrets.POSTGRES_USER }}" >> .env
+          echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> .env
+          echo "VL_URL=${{ secrets.VL_URL }}" >> .env
+          echo "GO_URL=${{ secrets.GO_URL }}" >> .env
+          echo "REDASH_BASE_URL=${{ secrets.REDASH_BASE_URL }}" >> .env
+          echo "REDASH_API_KEY=${{ secrets.REDASH_API_KEY }}" >> .env
+
+      - name: install python packages
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      
+      - name: retrieve data
+        run: python -m vl_checks.get_data
+
+      - name: execute py script
+        run: python -m vl_checks.daily
+  
