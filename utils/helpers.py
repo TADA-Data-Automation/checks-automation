@@ -9,6 +9,7 @@ from typing import Union
 import pandas as pd
 import psycopg2
 import requests
+from security import safe_requests
 
 
 class Postgres():
@@ -94,7 +95,7 @@ class Redash:
     job = self.job[query.id]
 
     if job['status'] not in (3,4):
-      response = requests.get(f"{self.__BASE_URL}/api/jobs/{job['id']}?api_key={self.__API_KEY}", timeout=60)
+      response = safe_requests.get(f"{self.__BASE_URL}/api/jobs/{job['id']}?api_key={self.__API_KEY}", timeout=60)
       self.job[query.id] = response.json()['job']
 
     elif job['status'] == 3:
@@ -120,7 +121,7 @@ class Redash:
       print(f'Query {queryId}: status {self.status[queryId]}')
     else:
       resultId = f'results/{self.resultId[queryId]}' if self.resultId[queryId] else 'results'
-      res = requests.get(f'{self.__BASE_URL}/api/queries/{queryId}/{resultId}.csv?api_key={self.__API_KEY}', timeout=60)
+      res = safe_requests.get(f'{self.__BASE_URL}/api/queries/{queryId}/{resultId}.csv?api_key={self.__API_KEY}', timeout=60)
       if res.status_code != 200:
         logging.warning(f'Failed getting results for Query {queryId}.')
       return self.read_csv_string(res.text)
