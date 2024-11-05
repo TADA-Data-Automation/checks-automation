@@ -33,13 +33,13 @@ def valid_dob(string):
 def retrieve_date(driver, nric: str, birthday: str, driver_type: str, car_type: int):
   if not (valid_nric(nric) and valid_dob(birthday)):
     return ("Invalid NRIC or DOB", pd.NA)
+  reset_button = driver.find_element(By.XPATH, '//*[@id="license-search-form"]/table/tbody/tr[3]/td[2]/button[2]')
+  driver.execute_script("arguments[0].click();", reset_button)
+
   ic = driver.find_element(By.XPATH, '//*[@id="nric"]')
-  ic.clear()
   ic.send_keys(nric)
   dob = driver.find_element(By.XPATH, '//*[@id="dob"]')
-  dob.clear()
   dob.send_keys(birthday)
-
   button = driver.find_element(By.XPATH, '//*[@id="proceedBtn"]')
   driver.execute_script("arguments[0].click();", button)
 
