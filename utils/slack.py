@@ -3,10 +3,10 @@ from io import StringIO
 from logging import Logger
 
 import pandas as pd
-import requests
 from dotenv import load_dotenv
 from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
+from security import safe_requests
 
 
 class SlackBot:
@@ -34,7 +34,7 @@ class SlackBot:
         self.logger.error("Error uploading file: {}".format(e))
 
   def to_pandas(self, url:str) -> pd.DataFrame:
-    response = requests.get(url, headers={'Authorization': f'Bearer {os.getenv("SLACK_TOKEN")}'}, timeout=60)
+    response = safe_requests.get(url, headers={'Authorization': f'Bearer {os.getenv("SLACK_TOKEN")}'}, timeout=60)
 
     return pd.read_csv(StringIO(response.text))
     
