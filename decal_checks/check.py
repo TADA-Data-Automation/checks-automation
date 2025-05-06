@@ -58,11 +58,10 @@ def main(partition: int):
   drivers = get_partition(df, partition)
 
   options = webdriver.ChromeOptions()
+  options.add_argument("--headless")
   options.add_argument("--window-size=1200x1200")
-  options.add_argument("--ignore-certificate-errors")
   options.add_argument("--no-sandbox")
   options.add_argument("--disable-dev-shm-usage")
-  os.environ["DISPLAY"] = ":99"
 
   driver = webdriver.Chrome(options=options)
 
@@ -95,7 +94,8 @@ def main(partition: int):
 
   except Exception as e:
     print("An exception occurred:", e)
-    pass
+    driver.quit()
+    raise e
 
   finally:
     drivers.to_csv(f'data/decal_check_{time.strftime("%b")}_{partition}.csv', index=False)
