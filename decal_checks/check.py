@@ -1,5 +1,6 @@
 import argparse
 import os
+import tempfile
 import time
 
 import pandas as pd
@@ -19,6 +20,8 @@ def get_partition(df: pd.DataFrame, partition:int, total_partitions: int=40):
 
 def get_driver():
   options = webdriver.ChromeOptions()
+  user_data_dir = tempfile.mkdtemp()
+  options.add_argument(f'--user-data-dir={user_data_dir}')
   options.add_argument("--window-size=1200x1200")
   options.add_argument("--ignore-certificate-errors")
   options.add_argument('--no-sandbox')
