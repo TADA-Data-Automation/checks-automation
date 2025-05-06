@@ -27,18 +27,18 @@ def fill_form(driver, car_plate):
 
   vehicle_input.clear()
   vehicle_input.send_keys(car_plate)
-  checkbox.click()
+  driver.execute_script("arguments[0].click();", checkbox)
 
   try:
     time.sleep(1)
-    submit_button.click()
+    driver.execute_script("arguments[0].click();", submit_button)
 
     wait = WebDriverWait(driver, 5)
     status = wait.until(EC.presence_of_element_located((By.XPATH, '//*[@id="pnlBdyVehicleList"]/div/div/div/div[1]/div[2]/p[2]'))).text
     decal = driver.find_element(By.XPATH, '//*[@id="pnlBdyVehicleList"]/div/div/div/div[2]/div[2]/p[2]').text
 
     button = driver.find_element(By.XPATH, '//*[@id="main-content"]/div[2]/div[2]/form/div[4]/div[1]/button[2]')
-    button.click()
+    driver.execute_script("arguments[0].click();", button)
 
     if status == 'Yes':
       return (1, decal)
