@@ -20,7 +20,8 @@ def get_partition(df: pd.DataFrame, partition:int, total_partitions: int=40):
 
 def get_driver():
   options = webdriver.ChromeOptions()
-  # options.add_argument('--headless')
+  options.add_argument("--window-size=1200x1200")
+  options.add_argument("--ignore-certificate-errors")
   options.add_argument('--no-sandbox')
   options.add_argument('--disable-dev-shm-usage')
   return webdriver.Chrome(options=options)
@@ -71,10 +72,19 @@ def main(partition: int):
     for i, row in drivers.iterrows():
       status, decal = fill_form(driver, row['car_plate'])
       if status == -1:
-        driver.quit()
-        time.sleep(1)
-        driver = get_driver()
-        driver.get(os.getenv('PH_URL'))
+        driver.delete_all_cookies()
+        driver.execute_script("window.localStorage.clear();")
+        driver.execute_script("window.sessionStorage.clear();")
+        
+        # Use CDP for deeper cache clearing
+        driver.execute_cdp_cmd('Network.clearBrowserCookies', {})
+        driver.execute_cdp_cmd('Network.clearBrowserCache', {})
+
+        # Open a new tab and switch to it
+        driver.execute_script("window.open('about:blank', '_blank');")
+        driver.switch_to.window(driver.window_handles[-1])
+        driver.get(os.getenv("PH_URL"))
+
         status, decal = fill_form(driver, row['car_plate'])
 
       drivers.at[i,'phv'] = status
