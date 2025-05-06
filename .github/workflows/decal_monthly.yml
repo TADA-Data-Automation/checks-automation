@@ -78,6 +78,14 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      - name: Install Xvfb
+        run: sudo apt-get update && sudo apt-get install -y xvfb
+
+      - name: Start virtual display
+        run: |
+          Xvfb :99 -screen 0 1920x1080x24 &
+          echo "DISPLAY=:99" >> $GITHUB_ENV
+
       - name: download artifacts
         uses: actions/download-artifact@v4
         with:
@@ -127,4 +135,3 @@ jobs:
 
       - name: send csv to slack
         run: python -m decal_checks.collate
-  

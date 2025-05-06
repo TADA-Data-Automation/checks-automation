@@ -18,13 +18,6 @@ def get_partition(df: pd.DataFrame, partition:int, total_partitions: int=40):
 
   return df[partition*chunk_size:(partition+1)*chunk_size]
 
-def get_driver():
-  options = webdriver.ChromeOptions()
-  options.add_argument("--window-size=1200x1200")
-  options.add_argument("--ignore-certificate-errors")
-  options.add_argument('--no-sandbox')
-  options.add_argument('--disable-dev-shm-usage')
-  return webdriver.Chrome(options=options)
 
 def fill_form(driver, car_plate):
   wait = WebDriverWait(driver, 5)
@@ -64,7 +57,14 @@ def main(partition: int):
 
   drivers = get_partition(df, partition)
 
-  driver = get_driver()
+  options = webdriver.ChromeOptions()
+  options.add_argument("--window-size=1200x1200")
+  options.add_argument("--ignore-certificate-errors")
+  options.add_argument("--no-sandbox")
+  options.add_argument("--disable-dev-shm-usage")
+  os.environ["DISPLAY"] = ":99"
+
+  driver = webdriver.Chrome(options=options)
 
   try:
     driver.get(os.getenv('PH_URL'))
