@@ -1,9 +1,9 @@
-name: PH Check Hourly
+name: Decal Check Monthly
 
 # Controls when the workflow will run
 on:
   schedule:
-    - cron: '*/30 0-15 * * *'
+    - cron: '00 00 1 * *'
   workflow_dispatch:
 
 jobs:
@@ -22,13 +22,6 @@ jobs:
         run: |
           echo "REDASH_BASE_URL=${{ secrets.REDASH_BASE_URL }}" >> .env
           echo "REDASH_API_KEY=${{ secrets.REDASH_API_KEY }}" >> .env
-          echo "POSTGRES_HOST=${{ secrets.POSTGRES_HOST }}" >> .env
-          echo "POSTGRES_DB=${{ secrets.POSTGRES_DB }}" >> .env
-          echo "POSTGRES_USER=${{ secrets.POSTGRES_USER }}" >> .env
-          echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> .env
-          echo "SLACK_TOKEN=${{ secrets.SLACK_TOKEN }}" >> .env
-          echo "SLACK_CHANNEL=${{ secrets.SLACK_CHANNEL }}" >> .env
-          echo "CACHE_CHANNEL=${{ secrets.CACHE_CHANNEL }}" >> .env
           echo "FERNET_KEY=${{ secrets.FERNET_KEY }}" >> .env
 
       - uses: actions/cache@v4
@@ -44,19 +37,19 @@ jobs:
           pip install -r requirements.txt
       
       - name: retrieve data
-        run: python -m ph_checks.get_data
+        run: python -m decal_checks.get_data --encrypt
       
       - name: upload artifacts
         uses: actions/upload-artifact@v4
         with:
           name: get-data
-          path: data/car_plates.csv
+          path: data/drivers.csv
 
   run-python-script:
     needs: get-data
     strategy:
       matrix:
-        partition: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39]
+        partition: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39]
 
     runs-on: ubuntu-latest
     steps:
@@ -67,7 +60,7 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.11' # install the python version needed
-
+      
       - name: Create .env file
         run: |
           echo "PH_URL=${{ secrets.PH_URL }}" >> .env
@@ -79,14 +72,6 @@ jobs:
           key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
           restore-keys: |
             ${{ runner.os }}-pip-
-
-      - name: install xvfb
-        run: sudo apt-get install xvfb
-
-      - name: Start Xvfb
-        run: |
-          Xvfb :99 -screen 0 1920x1080x24 &
-          export DISPLAY=:99
       
       - name: install python packages
         run: |
@@ -97,17 +82,15 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: get-data
-      
+
       - name: execute py script
-        env:
-          DISPLAY: :99
-        run: python -m ph_checks.check_no_captcha --partition ${{ matrix.partition }}
+        run: python -m decal_checks.check --partition ${{ matrix.partition }}
 
       - name: upload artifacts
         uses: actions/upload-artifact@v4
         with:
           name: data-${{ matrix.partition }}
-          path: data/ph_check_*.csv
+          path: data/decal_check_*.csv
 
   send-to-slack:
     runs-on: ubuntu-latest
@@ -125,7 +108,6 @@ jobs:
         run: |
           echo "SLACK_TOKEN=${{ secrets.SLACK_TOKEN }}" >> .env
           echo "SLACK_CHANNEL=${{ secrets.SLACK_CHANNEL }}" >> .env
-          echo "CACHE_CHANNEL=${{ secrets.CACHE_CHANNEL }}" >> .env
           echo "FERNET_KEY=${{ secrets.FERNET_KEY }}" >> .env
 
       - uses: actions/cache@v4
@@ -142,7 +124,7 @@ jobs:
 
       - name: download artifacts
         uses: actions/download-artifact@v4
-      
+
       - name: send csv to slack
-        run: python -m ph_checks.update
+        run: python -m decal_checks.collate
   
