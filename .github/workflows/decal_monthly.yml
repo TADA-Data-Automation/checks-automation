@@ -3,7 +3,7 @@ name: Decal Check Monthly
 # Controls when the workflow will run
 on:
   schedule:
-    - cron: '00 00 1 * *'
+    - cron: '00 00 * * 2' # every Tuesday at midnight UTC
   workflow_dispatch:
 
 jobs:

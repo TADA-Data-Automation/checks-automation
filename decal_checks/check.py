@@ -79,9 +79,20 @@ def main(partition: int):
         driver.execute_cdp_cmd('Network.clearBrowserCookies', {})
         driver.execute_cdp_cmd('Network.clearBrowserCache', {})
 
-        # Open a new tab and switch to it
+        # Open a new tab
         driver.execute_script("window.open('about:blank', '_blank');")
-        driver.switch_to.window(driver.window_handles[-1])
+        new_window = driver.window_handles[-1]
+        driver.switch_to.window(new_window)
+
+        # Close all other (older) windows
+        for handle in driver.window_handles[:-1]:
+            driver.switch_to.window(handle)
+            driver.close()
+
+        # Switch to the new window again
+        driver.switch_to.window(new_window)
+
+        # Navigate to the target page
         driver.get(os.getenv("PH_URL"))
 
         status, decal = fill_form(driver, row['car_plate'])
