@@ -101,6 +101,9 @@ def main(partition: int):
       if status == 1:
         drivers.at[i,'decal'] = decal
 
+      if (i + 1) % 50 == 0 or (i + 1) == len(drivers):
+          print(f"[{i+1}/{len(drivers)}] Processed {row['car_plate']} → Status: {status}, Decal: {decal}")
+
     driver.quit()
 
   except Exception as e:
