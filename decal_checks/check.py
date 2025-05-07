@@ -48,7 +48,7 @@ def fill_form(driver, car_plate):
   except UnexpectedAlertPresentException:
     alert = driver.switch_to.alert
     alert.accept()
-    return (-1, pd.NA)
+    return fill_form(driver, car_plate)
 
   except:
     return (-1, pd.NA)
@@ -62,6 +62,10 @@ def main(partition: int):
   df = pd.read_csv('drivers.csv')
 
   drivers = get_partition(df, partition)
+  drivers.reset_index(drop=True, inplace=True)
+
+  drivers['phv'] = pd.NA
+  drivers['decal'] = pd.NA
 
   options = webdriver.ChromeOptions()
   options.add_argument("--headless")
