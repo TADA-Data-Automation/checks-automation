@@ -14,7 +14,7 @@ def main(encrypt:bool):
   redash.run_query(Query(2984))
   df = redash.get_result(2984)
 
-  df = df.sample(n=4000, random_state=1)
+  df = df.sample(n=400, random_state=1)
 
   df.to_csv('data/drivers.csv', index=False)
 

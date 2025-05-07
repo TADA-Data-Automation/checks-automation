@@ -30,7 +30,7 @@ def fill_form(driver, car_plate):
   driver.execute_script("arguments[0].click();", checkbox)
 
   try:
-    time.sleep(1)
+    time.sleep(2)
     driver.execute_script("arguments[0].click();", submit_button)
 
     wait = WebDriverWait(driver, 5)
@@ -101,6 +101,8 @@ def main(partition: int):
 
         # Switch to the new window again
         driver.switch_to.window(new_window)
+
+        time.sleep(1)
 
         # Navigate to the target page
         driver.get(os.getenv("PH_URL"))
