@@ -1,11 +1,11 @@
 import argparse
 import os
-import tempfile
 import time
 
 import pandas as pd
 from dotenv import load_dotenv
 from selenium import webdriver
+from selenium.common.exceptions import UnexpectedAlertPresentException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
@@ -44,6 +44,12 @@ def fill_form(driver, car_plate):
       return (1, decal)
     else:
       return (0, pd.NA)
+  
+  except UnexpectedAlertPresentException:
+    alert = driver.switch_to.alert
+    alert.accept()
+    return (-1, pd.NA)
+
   except:
     return (-1, pd.NA)
 
@@ -86,8 +92,8 @@ def main(partition: int):
 
         # Close all other (older) windows
         for handle in driver.window_handles[:-1]:
-            driver.switch_to.window(handle)
-            driver.close()
+          driver.switch_to.window(handle)
+          driver.close()
 
         # Switch to the new window again
         driver.switch_to.window(new_window)
@@ -97,9 +103,9 @@ def main(partition: int):
 
         status, decal = fill_form(driver, row['car_plate'])
 
-      drivers.at[i,'phv'] = status
+      drivers.loc[i,'phv'] = status
       if status == 1:
-        drivers.at[i,'decal'] = decal
+        drivers.loc[i,'decal'] = decal
 
       if (i + 1) % 50 == 0 or (i + 1) == len(drivers):
           print(f"[{i+1}/{len(drivers)}] Processed {row['car_plate']} → Status: {status}, Decal: {decal}")
