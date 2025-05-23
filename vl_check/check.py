@@ -9,7 +9,8 @@ from dotenv import load_dotenv
 
 from utils.loader import Loader
 
-STATUSES = ["Revoked", "Suspended", "Cancelled", "Application Lapsed", "Approved to Attend Course", "Pending Licence Issuance"]
+STATUSES = ["Revoked", "Suspended", "Cancelled", "Application Lapsed", "Approved to Attend Course",
+            "Pending Licence Issuance", "Application Withdrawn", "Expired"]
 
 
 def get_partition(df: pd.DataFrame, partition: int, total_partitions: int = 40):
