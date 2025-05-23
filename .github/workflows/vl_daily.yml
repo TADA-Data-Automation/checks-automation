@@ -37,7 +37,7 @@ jobs:
           pip install -r requirements.txt
       
       - name: retrieve data
-        run: python -m vl_checks.get_data --encrypt
+        run: python -m vl_check.get_data --encrypt
       
       - name: upload artifacts
         uses: actions/upload-artifact@v4
@@ -84,7 +84,7 @@ jobs:
           name: get-data
 
       - name: execute py script
-        run: python -m vl_checks.check --partition ${{ matrix.partition }}
+        run: python -m vl_check.check --partition ${{ matrix.partition }}
 
       - name: upload artifacts
         uses: actions/upload-artifact@v4
@@ -126,5 +126,5 @@ jobs:
         uses: actions/download-artifact@v4
 
       - name: send csv to slack
-        run: python -m vl_checks.collate
+        run: python -m vl_check.collate
   

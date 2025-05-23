@@ -11,10 +11,8 @@ def main(encrypt:bool):
   load_dotenv()
 
   redash = Redash(os.getenv('REDASH_API_KEY'), os.getenv('REDASH_BASE_URL'))
-  redash.run_query(Query(2984))
-  df = redash.get_result(2984)
-
-  df = df.sample(n=400, random_state=1)
+  redash.run_query(Query(2977))
+  df = redash.get_result(2977)
 
   df.to_csv('data/drivers.csv', index=False)
 
