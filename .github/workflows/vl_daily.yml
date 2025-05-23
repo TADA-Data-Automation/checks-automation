@@ -64,6 +64,10 @@ jobs:
       - name: Create .env file
         run: |
           echo "VL_URL=${{ secrets.VL_URL }}" >> .env
+          echo "LTA_URL=${{ secrets.LTA_URL }}" >> .env
+          echo "LTA_ORIGIN=${{ secrets.LTA_ORIGIN }}" >> .env
+          echo "LTA_REFERER=${{ secrets.LTA_REFERER }}" >> .env
+          echo "LTA_USER_AGENT=${{ secrets.LTA_USER_AGENT }}" >> .env
           echo "FERNET_KEY=${{ secrets.FERNET_KEY }}" >> .env
 
       - uses: actions/cache@v4
