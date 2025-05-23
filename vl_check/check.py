@@ -9,7 +9,7 @@ from dotenv import load_dotenv
 
 from utils.loader import Loader
 
-STATUSES = ["Revoked", "Suspended", "Cancelled", "Application Lapsed", "Approved to Attend Course"]
+STATUSES = ["Revoked", "Suspended", "Cancelled", "Application Lapsed", "Approved to Attend Course", "Pending Licence Issuance"]
 
 
 def get_partition(df: pd.DataFrame, partition: int, total_partitions: int = 40):
@@ -48,7 +48,7 @@ def process_driver_vl_status(json_response, driver_type, car_type=None):
         return ("No VL record found", None)
 
     if driver_type in ['PRIVATE_HIRE', 'HOURLY_RENTAL']:
-        if car_type == 3001:
+        if not pd.isna(car_type) and car_type == 3001:
             relevant_vls = [vl for vl in vl_infos if vl.get("type") == "Bus Driver's Vocational Licence (BDVL)"]
         else:
             relevant_vls = [
@@ -120,6 +120,9 @@ def main(partition: int):
     df["remarks"] = None
 
     for index, row in df.iterrows():
+        if not valid_nric(row['nric']) or not valid_dob(row['birth']):
+            df.at[index, "remarks"] = "Invalid NRIC or DOB"
+            continue
         try:
             status, expiry = get_driver_data(row['nric'], row['birth'], row['type'], row.get('car_type'))
             df.at[index, "remarks"] = status
